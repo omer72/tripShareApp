@@ -5,6 +5,17 @@ import { AnswerAsk, Cities, Countries, ListScreen, Lists, LocationSheet, MyPlace
 
 const SEEN = 'metromosaic.welcomed'
 
+// Copy-paste and messengers add line breaks, percent-encoding and stray spaces.
+const readLink = () => {
+  if (!location.hash.startsWith('#l=')) return ''
+  const raw = location.hash.slice(3)
+  try {
+    return decodeURIComponent(raw).replace(/\s+/g, '')
+  } catch {
+    return raw.replace(/\s+/g, '')
+  }
+}
+
 // Screen stack instead of a router: one back button, no dep.
 export default function App() {
   const [state, setState] = useState(load)
@@ -142,15 +153,30 @@ export default function App() {
 
   // A sent link opens the receiver's view — same build, no app and no account.
   // The list travels in the fragment, so decoding it is all there is to do.
-  const packed = location.hash.startsWith('#l=') ? location.hash.slice(3) : ''
+  // Copy-paste and messengers add line breaks, percent-encoding and stray spaces;
+  // none of that changes the payload, so forgive it rather than call it damaged.
+  const [packed, setPacked] = useState(readLink)
   const [incoming, setIncoming] = useState(packed ? undefined : null)
   useEffect(() => {
-    if (packed) unpackList(packed).then(setIncoming).catch(() => setIncoming(null))
+    // A second link opened in the same tab only changes the hash — no reload.
+    const sync = () => setPacked(readLink())
+    window.addEventListener('hashchange', sync)
+    return () => window.removeEventListener('hashchange', sync)
+  }, [])
+  useEffect(() => {
+    if (!packed) { setIncoming(null); return }
+    setIncoming(undefined)
+    unpackList(packed).then(setIncoming).catch(() => setIncoming(null))
   }, [packed])
 
   if (packed) {
     if (incoming === undefined) return <div className="screen" style={{ padding: 'calc(var(--top) + 40px) 24px', font: '400 16px Archivo, sans-serif', color: 'var(--ink-3)' }}>Opening the list…</div>
-    if (incoming === null) return <div className="screen" style={{ padding: 'calc(var(--top) + 40px) 24px', font: '400 16px Archivo, sans-serif', color: 'var(--ink-2)' }}>That link is damaged — ask whoever sent it to send it again.</div>
+    if (incoming === null) return (
+      <div className="screen" style={{ padding: 'calc(var(--top) + 40px) 24px', font: '400 16px/1.5 Archivo, sans-serif', color: 'var(--ink-2)' }}>
+        That link is damaged — usually it got cut short on the way here. Ask whoever sent it to send it again, and open it without editing the address.
+        <div className="meta" style={{ marginTop: 14 }}>{packed.length} CHARACTERS RECEIVED</div>
+      </div>
+    )
     return (
       <PublicList
         list={incoming.list}
