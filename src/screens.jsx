@@ -151,23 +151,60 @@ export function Countries({ state, go, onRemoveShared }) {
 
 /* 2 — Cities in a country */
 export function Cities({ state, country, back, go, onMap, mapping }) {
+  const [query, setQuery] = useState('')
   const cities = Object.entries(byCountry(state.places)[country] ?? {}).sort()
   const places = cities.reduce((n, [, count]) => n + count, 0)
+
+  // Searching a country looks past the cities to the places themselves — you
+  // rarely remember which city a place was in, which is why you're searching.
+  const needle = query.trim().toLowerCase()
+  const found = !needle
+    ? []
+    : state.places.filter(
+        (p) =>
+          p.country === country &&
+          [p.name, p.note, p.area, p.address, p.city, ...(p.tags ?? [])].join(' ').toLowerCase().includes(needle),
+      )
 
   return (
     <div className="screen">
       <TopBar onBack={back} title={[flagOf(country), country].filter(Boolean).join(' ')} />
-      <div className="scroll" style={{ padding: '18px 20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {cities.map(([city, n]) => (
-          <button key={city} className="card" onClick={() => go({ name: 'places', city, country })} style={{ padding: 14, display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left' }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ font: '700 21px Archivo, sans-serif', letterSpacing: '-.015em' }}>{city}</div>
-              <div className="meta" style={{ marginTop: 6 }}>{n} {n === 1 ? 'PLACE' : 'PLACES'}</div>
-            </div>
-            {Icon.right('#8A8F92')}
-          </button>
-        ))}
+
+      <div style={{ padding: '14px 20px 0', flex: 'none' }}>
+        <input
+          className="field"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={`Search all of ${country}`}
+        />
       </div>
+
+      <div className="scroll" style={{ padding: '18px 20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {needle
+          ? found.map((p) => (
+              <PlaceRow
+                key={p.id}
+                place={p}
+                boxed
+                size={82}
+                onClick={() => go({ name: 'place', id: p.id })}
+                footer={<div className="meta" style={{ marginTop: 8 }}>{[p.city?.toUpperCase(), p.area?.toUpperCase()].filter(Boolean).join(' · ')}</div>}
+              />
+            ))
+          : cities.map(([city, n]) => (
+              <button key={city} className="card" onClick={() => go({ name: 'places', city, country })} style={{ padding: 14, display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ font: '700 21px Archivo, sans-serif', letterSpacing: '-.015em' }}>{city}</div>
+                  <div className="meta" style={{ marginTop: 6 }}>{n} {n === 1 ? 'PLACE' : 'PLACES'}</div>
+                </div>
+                {Icon.right('#8A8F92')}
+              </button>
+            ))}
+        {needle && !found.length && (
+          <p style={{ color: 'var(--ink-3)', fontSize: 15 }}>Nothing in {country} matches “{query.trim()}”.</p>
+        )}
+      </div>
+
       {/* Every city at once — the whole country on one map. */}
       <div style={{ padding: '0 20px calc(var(--bottom) + 10px)' }}>
         <button className="btn btn-plain" onClick={onMap} disabled={mapping || !places} style={{ height: 46, borderRadius: 12, fontSize: 16 }}>
