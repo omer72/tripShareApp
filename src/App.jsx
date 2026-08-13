@@ -154,6 +154,13 @@ export default function App() {
     if (name) setState((s) => ({ ...s, me: { ...s.me, name } }))
   }
 
+  // Deleting someone else's list only drops it from your inbox — anything you
+  // already kept from it stays in your places.
+  const removeShared = (list) => {
+    if (!confirm(`Delete “${list.title}” from ${list.by}? Places you already kept stay.`)) return
+    setState((s) => ({ ...s, shared: s.shared.filter((x) => x.id !== list.id) }))
+  }
+
   const countSend = (listId) =>
     setState((s) => ({ ...s, lists: s.lists.map((l) => (l.id === listId ? { ...l, sent: l.sent + 1 } : l)) }))
 
@@ -231,7 +238,7 @@ export default function App() {
         return <PlaceScreen place={place} back={back} others={otherNotes(place, state.shared)} onEdit={() => go({ name: 'save', id: place.id })} onSend={() => setSheet({ kind: 'send', list: asList })} />
       }
       default:
-        return <Countries state={state} go={go} />
+        return <Countries state={state} go={go} onRemoveShared={removeShared} />
     }
   }
 

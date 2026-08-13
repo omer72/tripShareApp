@@ -58,7 +58,7 @@ export function Welcome({ me, onStart }) {
 }
 
 /* 1 — Home: your countries, and what people sent you */
-export function Countries({ state, go }) {
+export function Countries({ state, go, onRemoveShared }) {
   const tree = byCountry(state.places)
   const countries = Object.keys(tree).sort()
 
@@ -96,14 +96,20 @@ export function Countries({ state, go }) {
             <div className="eyebrow" style={{ marginTop: 26 }}>SHARED WITH YOU · {state.shared.length}</div>
             <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {state.shared.map((s) => (
-                <button key={s.id} className="card" onClick={() => go({ name: 'shared', id: s.id })} style={{ padding: 12, display: 'flex', gap: 12, alignItems: 'center', textAlign: 'left' }}>
-                  <Photo src={s.places[0]?.photos?.[0]} size={52} radius={9} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ font: '600 16.5px Archivo, sans-serif' }}>{s.title}</div>
-                    <div className="meta" style={{ marginTop: 5 }}>{s.by.toUpperCase()} · {s.places.length} PLACES</div>
-                  </div>
-                  {Icon.right('#8A8F92')}
-                </button>
+                <div key={s.id} className="card" style={{ padding: 12, display: 'flex', gap: 12, alignItems: 'center' }}>
+                  <button onClick={() => go({ name: 'shared', id: s.id })} style={{ flex: 1, minWidth: 0, display: 'flex', gap: 12, alignItems: 'center', textAlign: 'left' }}>
+                    <Photo src={s.places[0]?.photos?.[0]} size={52} radius={9} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ font: '600 16.5px Archivo, sans-serif' }}>{s.title}</div>
+                      <div className="meta" style={{ marginTop: 5 }}>{s.by.toUpperCase()} · {s.places.length} PLACES</div>
+                    </div>
+                    {Icon.right('#8A8F92')}
+                  </button>
+                  {/* Someone else's list you're done with — yours to drop. */}
+                  <button onClick={() => onRemoveShared(s)} aria-label={`Delete ${s.title}`} style={{ width: 34, height: 34, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', background: 'var(--fill)' }}>
+                    {Icon.trash()}
+                  </button>
+                </div>
               ))}
             </div>
           </>

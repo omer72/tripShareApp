@@ -17,6 +17,8 @@ npm run device  # sync + ios/install.sh — build, sign, install, launch on pair
 
 No test framework: `test.js` is a plain node script of `assert` calls. Add checks there rather than introducing a runner.
 
+Brand images are generated, not hand-drawn: `swift tools/appicon.swift icon <path>` writes the 1024px app icon and `... splash <path>` the 2732px launch image (same nine-flag mosaic). Rerun and overwrite the files in `Assets.xcassets` to change them.
+
 `npm run device` signs with team `ZZT9HHZQNA` by default; override with `TEAM=XXXXXXXXXX npm run device`.
 
 ## Architecture

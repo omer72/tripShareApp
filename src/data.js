@@ -77,7 +77,7 @@ export function load() {
 
 export function save(state) {
   try {
-    localStorage.setItem(KEY, JSON.stringify({ places: state.places, lists: state.lists, me: state.me }))
+    localStorage.setItem(KEY, JSON.stringify({ places: state.places, lists: state.lists, shared: state.shared, me: state.me }))
   } catch (e) {
     // Full quota mustn't take the app down — the in-memory state is still correct.
     // ponytail: photos are the only thing big enough to hit this; move them out of
