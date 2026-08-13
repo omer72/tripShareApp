@@ -2,7 +2,7 @@
 const KEY = 'metromosaic.v1'
 
 export const TAGS = ['Worth a detour', 'Book ahead', 'Kids fine', 'Cheap', 'Cash only']
-export const KINDS = { EAT: '#E2552B', SEE: '#1B5E4B', DRINK: '#8A8F92' }
+export const KINDS = { EAT: '#E2552B', SEE: '#1B5E4B', DRINK: '#8A8F92', BEACH: '#2E6FA8', HOTEL: '#7A4B8C' }
 
 const seed = {
   me: { name: 'Omer' },

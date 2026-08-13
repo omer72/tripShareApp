@@ -35,7 +35,7 @@ export function Splash() {
           <span key={i} style={{ fontSize: 54, lineHeight: 1.15, textAlign: 'center' }}>{f}</span>
         ))}
       </div>
-      <div style={{ font: '700 34px Archivo, sans-serif', letterSpacing: '-.03em', marginTop: 30 }}>MetroMosaic</div>
+      <div style={{ font: '700 36px Archivo, sans-serif', letterSpacing: '-.03em', marginTop: 30 }}>MetroMosaic</div>
     </div>
   )
 }
@@ -46,7 +46,7 @@ export function Welcome({ me, onStart }) {
     <div className="screen">
       <div className="scroll" style={{ padding: 'calc(var(--top) + 64px) 26px 0' }}>
         <div className="eyebrow" style={{ letterSpacing: '.18em' }}>METROMOSAIC</div>
-        <div style={{ font: '700 38px/1.08 Archivo, sans-serif', letterSpacing: '-.035em', marginTop: 14 }}>
+        <div style={{ font: '700 40px/1.08 Archivo, sans-serif', letterSpacing: '-.035em', marginTop: 14 }}>
           The places you'd actually send someone.
         </div>
         <div style={{ font: '400 17px/1.6 Archivo, sans-serif', color: 'var(--ink-2)', marginTop: 16 }}>
@@ -61,7 +61,7 @@ export function Welcome({ me, onStart }) {
             <div key={t} style={{ display: 'flex', gap: 12 }}>
               <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--green)', flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 2 }}>{Icon.check()}</div>
               <div>
-                <div style={{ font: '600 17px Archivo, sans-serif' }}>{t}</div>
+                <div style={{ font: '600 19px Archivo, sans-serif' }}>{t}</div>
                 <div style={{ font: '400 15px/1.45 Archivo, sans-serif', color: 'var(--ink-3)', marginTop: 3 }}>{d}</div>
               </div>
             </div>
@@ -85,7 +85,7 @@ export function Countries({ state, go, onRemoveShared }) {
       <div style={{ padding: 'calc(var(--top) + 16px) 20px 0', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
           <div className="eyebrow" style={{ letterSpacing: '.15em' }}>MY PLACES · {state.places.length}</div>
-          <div style={{ font: '700 29px/1.15 Archivo, sans-serif', letterSpacing: '-.028em', marginTop: 8 }}>Where you've been</div>
+          <div style={{ font: '700 31px/1.15 Archivo, sans-serif', letterSpacing: '-.028em', marginTop: 8 }}>Where you've been</div>
         </div>
         <button onClick={() => go({ name: 'lists' })} className="avatar" style={{ width: 34, height: 34, fontSize: 14 }}>
           {initialsOf(state.me.name)}
@@ -99,7 +99,7 @@ export function Countries({ state, go, onRemoveShared }) {
           return (
             <button key={c} className="card" onClick={() => go({ name: 'cities', country: c })} style={{ width: '100%', padding: 14, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left' }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ font: '700 19px Archivo, sans-serif', letterSpacing: '-.015em' }}>{[flagOf(c), c].filter(Boolean).join(' ')}</div>
+                <div style={{ font: '700 21px Archivo, sans-serif', letterSpacing: '-.015em' }}>{[flagOf(c), c].filter(Boolean).join(' ')}</div>
                 <div className="meta" style={{ marginTop: 6 }}>{cities.length} {cities.length === 1 ? 'CITY' : 'CITIES'} · {total} PLACES</div>
                 <div style={{ font: '400 14.5px Archivo, sans-serif', color: 'var(--ink-3)', marginTop: 5 }}>{cities.join(' · ')}</div>
               </div>
@@ -118,7 +118,7 @@ export function Countries({ state, go, onRemoveShared }) {
                   <button onClick={() => go({ name: 'shared', id: s.id })} style={{ flex: 1, minWidth: 0, display: 'flex', gap: 12, alignItems: 'center', textAlign: 'left' }}>
                     <Photo src={s.places[0]?.photos?.[0]} size={52} radius={9} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ font: '600 16.5px Archivo, sans-serif' }}>{s.title}</div>
+                      <div style={{ font: '600 18.5px Archivo, sans-serif' }}>{s.title}</div>
                       <div className="meta" style={{ marginTop: 5 }}>{s.by.toUpperCase()} · {s.places.length} PLACES</div>
                     </div>
                     {Icon.right('#8A8F92')}
@@ -152,7 +152,7 @@ export function Cities({ state, country, back, go }) {
         {cities.map(([city, n]) => (
           <button key={city} className="card" onClick={() => go({ name: 'places', city, country })} style={{ padding: 14, display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left' }}>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ font: '700 19px Archivo, sans-serif', letterSpacing: '-.015em' }}>{city}</div>
+              <div style={{ font: '700 21px Archivo, sans-serif', letterSpacing: '-.015em' }}>{city}</div>
               <div className="meta" style={{ marginTop: 6 }}>{n} {n === 1 ? 'PLACE' : 'PLACES'}</div>
             </div>
             {Icon.right('#8A8F92')}
@@ -177,7 +177,7 @@ export function MyPlaces({ state, go, back, onShareAll, onMap, mapping, city = s
           {back && <button onClick={back} aria-label="Back" style={{ display: 'flex', marginTop: 14 }}>{Icon.back()}</button>}
           <div>
             <div className="eyebrow" style={{ letterSpacing: '.15em' }}>{flagOf(country)} {(country || 'MY PLACES').toUpperCase()} · {inCity.length}</div>
-            <div style={{ font: '700 29px/1.15 Archivo, sans-serif', letterSpacing: '-.028em', marginTop: 8 }}>{city}</div>
+            <div style={{ font: '700 31px/1.15 Archivo, sans-serif', letterSpacing: '-.028em', marginTop: 8 }}>{city}</div>
           </div>
         </div>
         <button onClick={() => go({ name: 'lists' })} className="avatar" style={{ width: 34, height: 34, fontSize: 14 }}>
@@ -314,7 +314,7 @@ export function SavePlace({ state, back, onSave, askLocation, onNewList, place, 
     <div className="screen">
       <div style={{ padding: 'calc(var(--top) + 14px) 20px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <button onClick={back} style={{ font: '500 17px Archivo, sans-serif', color: 'var(--ink-2)' }}>Cancel</button>
-        <div style={{ font: '600 15px Archivo, sans-serif' }}>{place ? 'Edit place' : 'Save a place'}</div>
+        <div style={{ font: '600 17px Archivo, sans-serif' }}>{place ? 'Edit place' : 'Save a place'}</div>
         <div style={{ width: 44 }} />
       </div>
 
@@ -322,7 +322,7 @@ export function SavePlace({ state, back, onSave, askLocation, onNewList, place, 
         <div className="card" style={{ padding: '13px 14px', display: 'flex', alignItems: 'center', gap: 11 }}>
           {Icon.pin()}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Place name" style={{ border: 0, outline: 'none', background: 'none', font: '600 17px Archivo, sans-serif', width: '100%' }} />
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Place name" style={{ border: 0, outline: 'none', background: 'none', font: '600 19px Archivo, sans-serif', width: '100%' }} />
             <input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Address" style={{ border: 0, outline: 'none', background: 'none', font: '400 13.5px Archivo, sans-serif', color: 'var(--ink-3)', width: '100%', marginTop: 2 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end', flex: 'none' }}>
@@ -351,7 +351,7 @@ export function SavePlace({ state, back, onSave, askLocation, onNewList, place, 
                     style={{ textAlign: 'left', padding: '10px 12px', borderRadius: 10, background: on ? 'rgba(27,94,75,.08)' : 'transparent', display: 'flex', alignItems: 'center', gap: 10 }}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ font: '600 16px Archivo, sans-serif' }}>{s.name || s.address}</div>
+                      <div style={{ font: '600 18px Archivo, sans-serif' }}>{s.name || s.address}</div>
                       {s.name && <div style={{ font: '400 13.5px Archivo, sans-serif', color: 'var(--ink-3)', marginTop: 2 }}>{s.address}</div>}
                     </div>
                     {on && Icon.check('var(--green)')}
@@ -373,7 +373,7 @@ export function SavePlace({ state, back, onSave, askLocation, onNewList, place, 
 
         <div className="eyebrow" style={{ marginTop: 20 }}>INSTAGRAM</div>
         <div className="card" style={{ marginTop: 10, padding: '13px 14px', display: 'flex', alignItems: 'center', gap: 9 }}>
-          <span style={{ font: '600 17px Archivo, sans-serif', color: 'var(--ink-3)' }}>@</span>
+          <span style={{ font: '600 19px Archivo, sans-serif', color: 'var(--ink-3)' }}>@</span>
           <input value={instagram} onChange={(e) => setInstagram(instagramHandle(e.target.value) || e.target.value.replace(/[^A-Za-z0-9._]/g, ''))} placeholder="casaboa" autoCapitalize="none" autoCorrect="off" style={{ border: 0, outline: 'none', background: 'none', font: '400 16px Archivo, sans-serif', flex: 1, minWidth: 0 }} />
           <button onClick={scan} style={{ font: '500 14px Archivo, sans-serif', color: 'var(--green)' }}>Scan code</button>
         </div>
@@ -504,12 +504,12 @@ export function SendSheet({ list, places, close, onSent, me }) {
     <div className="sheet" onClick={close}>
       <div className="sheet-body" onClick={(e) => e.stopPropagation()}>
         <div className="grabber" />
-        <div style={{ font: '700 23px/1.2 Archivo, sans-serif', letterSpacing: '-.025em' }}>Send “{list.title}”</div>
+        <div style={{ font: '700 25px/1.2 Archivo, sans-serif', letterSpacing: '-.025em' }}>Send “{list.title}”</div>
 
         <div className="card" style={{ marginTop: 14, padding: '12px 13px', display: 'flex', alignItems: 'center', gap: 11 }}>
           <Photo src={places[0]?.photos?.[0]} size={44} radius={8} />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ font: '600 15.5px Archivo, sans-serif' }}>{places.length} places · {me?.name ?? 'you'}</div>
+            <div style={{ font: '600 17.5px Archivo, sans-serif' }}>{places.length} places · {me?.name ?? 'you'}</div>
             <div className="meta" style={{ marginTop: 5, letterSpacing: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {url ? `${url.replace('https://', '').slice(0, 44)}…` : 'Packing the list into the link…'}
             </div>
@@ -524,7 +524,7 @@ export function SendSheet({ list, places, close, onSent, me }) {
 
         <button onClick={() => setLive(!live)} className="card" style={{ marginTop: 10, padding: '12px 13px', display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ font: '600 15.5px Archivo, sans-serif' }}>Keep it live</div>
+            <div style={{ font: '600 17.5px Archivo, sans-serif' }}>Keep it live</div>
             <div style={{ font: '400 13.5px/1.4 Archivo, sans-serif', color: 'var(--ink-3)', marginTop: 3 }}>They see edits you make later</div>
           </div>
           <div style={{ width: 44, height: 26, borderRadius: 99, background: live ? 'var(--orange)' : 'rgba(16,19,20,.16)', padding: 3, display: 'flex', justifyContent: live ? 'flex-end' : 'flex-start', flex: 'none', transition: 'all .15s' }}>
@@ -555,7 +555,7 @@ export function PublicList({ list, places, onKeep, onBack, onDelete, openInApp, 
             <div className="avatar" style={{ width: 22, height: 22, fontSize: 10.5 }}>{list.initials || initialsOf(list.by)}</div>
             <span className="eyebrow" style={{ color: 'rgba(243,241,235,.75)' }}>{(list.by || 'SOMEONE').toUpperCase()} RECOMMENDS</span>
           </div>
-          <div style={{ font: '700 28px/1.14 Archivo, sans-serif', letterSpacing: '-.03em', color: 'var(--paper)', marginTop: 8 }}>{list.title}</div>
+          <div style={{ font: '700 30px/1.14 Archivo, sans-serif', letterSpacing: '-.03em', color: 'var(--paper)', marginTop: 8 }}>{list.title}</div>
         </Hero>
         <div style={{ padding: '15px 20px 0', font: '400 15.5px/1.55 Archivo, sans-serif', color: 'var(--ink-2)' }}>{list.blurb}</div>
         <div style={{ padding: '16px 20px 12px' }}>
@@ -565,7 +565,7 @@ export function PublicList({ list, places, onKeep, onBack, onDelete, openInApp, 
                 <Photo src={p.photos?.[0]} size={60} radius={9} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
-                    <span style={{ font: '700 17.5px/1.2 Archivo, sans-serif', letterSpacing: '-.015em' }}>{p.name}</span>
+                    <span style={{ font: '700 19.5px/1.2 Archivo, sans-serif', letterSpacing: '-.015em' }}>{p.name}</span>
                     <Kind k={p.kind} />
                     <Stars n={p.stars} size={12} />
                   </div>
@@ -611,7 +611,7 @@ export function PlaceScreen({ place, back, onSend, onEdit, others = [] }) {
         <Hero height={260} src={place.photos?.[0]} onBack={back} />
         <div style={{ padding: '18px 20px 0' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-            <div style={{ font: '700 27px/1.15 Archivo, sans-serif', letterSpacing: '-.028em' }}>{place.name}</div>
+            <div style={{ font: '700 29px/1.15 Archivo, sans-serif', letterSpacing: '-.028em' }}>{place.name}</div>
             <Kind k={place.kind} />
           </div>
           {!!place.stars && <div style={{ marginTop: 9 }}><Stars n={place.stars} size={17} /></div>}
@@ -651,7 +651,7 @@ export function PlaceScreen({ place, back, onSend, onEdit, others = [] }) {
                   <div key={o.id} className="card" style={{ padding: '13px 14px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                       <div className="avatar" style={{ width: 26, height: 26, fontSize: 11.5, flex: 'none' }}>{o.initials}</div>
-                      <div style={{ font: '600 15.5px Archivo, sans-serif', flex: 1 }}>{o.by}</div>
+                      <div style={{ font: '600 17.5px Archivo, sans-serif', flex: 1 }}>{o.by}</div>
                       <Stars n={o.stars} size={13} />
                     </div>
                     <div style={{ font: '400 15.5px/1.5 Archivo, sans-serif', color: 'var(--ink-2)', marginTop: 9 }}>{o.note}</div>
@@ -713,7 +713,7 @@ export function AnswerAsk({ state, back, onSend }) {
               <button key={o.id} onClick={() => setPicked(o.id)} className="card" style={{ border: on ? '1.5px solid var(--orange)' : undefined, padding: '12px 13px', display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left' }}>
                 <Photo size={44} radius={9} />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ font: '600 16px Archivo, sans-serif' }}>{o.title}</div>
+                  <div style={{ font: '600 18px Archivo, sans-serif' }}>{o.title}</div>
                   <div className="meta" style={{ marginTop: 5 }}>{o.placeIds.length} PLACES · {o.id === 'auto' ? 'AUTO-BUILT' : `SENT ${o.sent}×`}</div>
                 </div>
                 <div style={{ width: 20, height: 20, borderRadius: '50%', flex: 'none', background: on ? 'var(--orange)' : 'transparent', border: on ? 0 : '1.5px solid rgba(16,19,20,.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -738,7 +738,7 @@ export function LocationSheet({ onAllow, onDecline }) {
       <div className="sheet-body" style={{ paddingInline: 22 }}>
         <div className="grabber" />
         <div style={{ width: 52, height: 52, borderRadius: 14, background: 'var(--fill)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{Icon.locate()}</div>
-        <div style={{ font: '700 23px/1.22 Archivo, sans-serif', letterSpacing: '-.025em', marginTop: 16 }}>Use your location to save faster</div>
+        <div style={{ font: '700 25px/1.22 Archivo, sans-serif', letterSpacing: '-.025em', marginTop: 16 }}>Use your location to save faster</div>
         <div style={{ font: '400 15.5px/1.55 Archivo, sans-serif', color: 'var(--ink-2)', marginTop: 9 }}>
           We'll fill in where you're standing, so saving a place is one line of typing. Never shared with anyone — not even on lists you send.
         </div>
@@ -784,7 +784,7 @@ export function Lists({ state, back, go, onRename, onNewList }) {
             <button key={l.id} className="card" onClick={() => go({ name: 'list', id: l.id })} style={{ padding: 12, display: 'flex', gap: 12, alignItems: 'center', textAlign: 'left' }}>
               <Photo size={52} radius={9} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ font: '600 16.5px Archivo, sans-serif' }}>{l.title}</div>
+                <div style={{ font: '600 18.5px Archivo, sans-serif' }}>{l.title}</div>
                 <div className="meta" style={{ marginTop: 5 }}>{l.placeIds.length} PLACES · SENT {l.sent}×</div>
               </div>
             </button>
@@ -794,7 +794,7 @@ export function Lists({ state, back, go, onRename, onNewList }) {
         <button className="card" onClick={() => go({ name: 'ask' })} style={{ marginTop: 12, padding: 12, display: 'flex', gap: 12, alignItems: 'center', textAlign: 'left', width: '100%' }}>
           <div className="avatar" style={{ width: 44, height: 44, fontSize: 15, flex: 'none' }}>NA</div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ font: '600 16px Archivo, sans-serif' }}>Noa Adler</div>
+            <div style={{ font: '600 18px Archivo, sans-serif' }}>Noa Adler</div>
             <div style={{ font: '400 14px/1.4 Archivo, sans-serif', color: 'var(--ink-2)', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Where do we eat in Lisbon?</div>
           </div>
         </button>

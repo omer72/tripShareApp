@@ -56,7 +56,7 @@ export function TopBar({ onBack, title, right }) {
   return (
     <div style={{ paddingTop: 'calc(var(--top) + 12px)', paddingBottom: 14, paddingInline: 20, display: 'flex', alignItems: 'center', gap: 12, borderBottom: '1px solid var(--line)', flex: 'none' }}>
       {onBack && <button onClick={onBack} aria-label="Back" style={{ display: 'flex' }}>{Icon.back()}</button>}
-      <div style={{ flex: 1, font: '600 16px Archivo, sans-serif' }}>{title}</div>
+      <div style={{ flex: 1, font: '600 18px Archivo, sans-serif' }}>{title}</div>
       {right}
     </div>
   )
@@ -75,7 +75,7 @@ export function Hero({ height, src, onBack, eyebrow, title, children }) {
       )}
       <div style={{ position: 'absolute', left: 20, right: 20, bottom: 16, pointerEvents: 'none' }}>
         {eyebrow && <div className="eyebrow" style={{ color: 'rgba(243,241,235,.7)', letterSpacing: '.15em' }}>{eyebrow}</div>}
-        {title && <div style={{ font: '700 30px/1.12 Archivo, sans-serif', letterSpacing: '-.03em', color: 'var(--paper)', marginTop: 8 }}>{title}</div>}
+        {title && <div style={{ font: '700 32px/1.12 Archivo, sans-serif', letterSpacing: '-.03em', color: 'var(--paper)', marginTop: 8 }}>{title}</div>}
         {children}
       </div>
     </div>
@@ -93,7 +93,7 @@ export function PlaceRow({ place, onClick, size = 56, boxed = false, footer, rig
       <Photo src={place.photos?.[0]} size={size} radius={boxed ? 10 : 9} />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, flexWrap: 'wrap' }}>
-          <span style={{ font: '700 17.5px/1.2 Archivo, sans-serif', letterSpacing: '-.015em' }}>{place.name}</span>
+          <span style={{ font: '700 19.5px/1.2 Archivo, sans-serif', letterSpacing: '-.015em' }}>{place.name}</span>
           <Kind k={place.kind} />
           <Stars n={place.stars} size={12} />
         </div>
