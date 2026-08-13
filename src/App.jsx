@@ -19,7 +19,7 @@ const readLink = () => {
 // Screen stack instead of a router: one back button, no dep.
 export default function App() {
   const [state, setState] = useState(load)
-  // Held for three seconds on a cold start; a shared link skips it, since the
+  // Held for five seconds on a cold start; a shared link skips it, since the
   // person opening one came for the list, not for us.
   const [booting, setBooting] = useState(!location.hash.startsWith('#l='))
   const [welcomed, setWelcomed] = useState(() => !!localStorage.getItem(SEEN))
@@ -30,7 +30,7 @@ export default function App() {
   useEffect(() => save(state), [state])
   useEffect(() => {
     if (!booting) return
-    const done = setTimeout(() => setBooting(false), 3000)
+    const done = setTimeout(() => setBooting(false), 5000)
     return () => clearTimeout(done)
   }, [booting])
   useEffect(() => {
