@@ -219,7 +219,7 @@ export function MyPlaces({ state, go, back, onShareAll, onMap, mapping, city = s
 
 /* 3b — Save a place: one required field, the note. Doubles as the edit form when
    given a `place` — same fields, so there's no second screen to keep in step. */
-export function SavePlace({ state, back, onSave, askLocation, place, city: atCity, country: atCountry }) {
+export function SavePlace({ state, back, onSave, askLocation, onNewList, place, city: atCity, country: atCountry }) {
   const [name, setName] = useState(place?.name ?? '')
   const [address, setAddress] = useState(place?.address ?? '')
   const [note, setNote] = useState(place?.note ?? '')
@@ -428,6 +428,8 @@ export function SavePlace({ state, back, onSave, askLocation, place, city: atCit
           {state.lists.map((l) => (
             <button key={l.id} className={`chip ${listIds.includes(l.id) ? 'on' : ''}`} onClick={() => setListIds(toggle(listIds, l.id))}>{l.title}</button>
           ))}
+          {/* No list fits? Make one here rather than losing what you've typed. */}
+          <button className="chip" onClick={() => { const id = onNewList?.(); if (id) setListIds((ids) => [...ids, id]) }}>+ New list</button>
         </div>
       </div>
 
@@ -764,7 +766,7 @@ export function OfflineBanner({ queued }) {
 
 /* Lists index — reached from the avatar; not a design screen, the shortest way
    to make lists and "someone asks you" reachable from the app. */
-export function Lists({ state, back, go, onRename }) {
+export function Lists({ state, back, go, onRename, onNewList }) {
   return (
     <div className="screen">
       <TopBar
@@ -773,7 +775,10 @@ export function Lists({ state, back, go, onRename }) {
         right={<button onClick={onRename} style={{ font: '500 15px Archivo, sans-serif', color: 'var(--green)' }}>Change name</button>}
       />
       <div className="scroll" style={{ padding: '18px 20px' }}>
-        <div className="eyebrow">MY LISTS</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="eyebrow">MY LISTS · {state.lists.length}</div>
+          <button onClick={onNewList} style={{ font: '500 15px Archivo, sans-serif', color: 'var(--green)' }}>+ New list</button>
+        </div>
         <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
           {state.lists.map((l) => (
             <button key={l.id} className="card" onClick={() => go({ name: 'list', id: l.id })} style={{ padding: 12, display: 'flex', gap: 12, alignItems: 'center', textAlign: 'left' }}>

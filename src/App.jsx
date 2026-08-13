@@ -171,6 +171,25 @@ export default function App() {
     return true
   }
 
+  // Lists are made where you need them: on the profile screen, or mid-save when
+  // you realise the place doesn't belong in any list you have.
+  const newList = () => {
+    const title = prompt('Name the list — “Lisbon, 3 days”, “Best meals”')?.trim()
+    if (!title) return null
+    const list = {
+      id: `l${Date.now()}`,
+      title,
+      blurb: '',
+      placeIds: [],
+      sent: 0,
+      updated: 'now',
+      live: true,
+      slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+    }
+    setState((s) => ({ ...s, lists: [...s.lists, list] }))
+    return list.id
+  }
+
   const countSend = (listId) =>
     setState((s) => ({ ...s, lists: s.lists.map((l) => (l.id === listId ? { ...l, sent: l.sent + 1 } : l)) }))
 
@@ -225,7 +244,7 @@ export default function App() {
     switch (top.name) {
       case 'save': {
         const editing = top.id && state.places.find((p) => p.id === top.id)
-        return <SavePlace key={top.id ?? 'new'} state={state} back={back} place={editing || undefined} onSave={(f) => savePlace({ ...f, id: top.id })} askLocation={askLocation} city={top.city} country={top.country} />
+        return <SavePlace key={top.id ?? 'new'} state={state} back={back} place={editing || undefined} onSave={(f) => savePlace({ ...f, id: top.id })} askLocation={askLocation} onNewList={newList} city={top.city} country={top.country} />
       }
       case 'cities':
         return <Cities state={state} country={top.country} back={back} go={go} />
@@ -245,7 +264,7 @@ export default function App() {
         )
       }
       case 'lists':
-        return <Lists state={state} back={back} go={go} onRename={rename} />
+        return <Lists state={state} back={back} go={go} onRename={rename} onNewList={newList} />
       case 'ask':
         return <AnswerAsk state={state} back={back} onSend={(list) => setSheet({ kind: 'send', list })} />
       case 'list': {
