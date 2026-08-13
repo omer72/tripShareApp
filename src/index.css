@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --paper: #f3f1eb;
+  --card: #ffffff;
+  --ink: #101314;
+  --ink-2: #6b7075;
+  --ink-3: #8a8f92;
+  --line: rgba(16, 19, 20, 0.1);
+  --line-2: rgba(16, 19, 20, 0.13);
+  --fill: #e7e4dc;
+  --photo: #ddd9cf;
+  --orange: #e2552b;
+  --green: #1b5e4b;
+  --blue: #2e6fa8;
+  --top: env(safe-area-inset-top, 20px);
+  --bottom: env(safe-area-inset-bottom, 16px);
+  font-family: Archivo, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--paper); color: var(--ink); overscroll-behavior: none; }
+
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+input, textarea { font: inherit; color: inherit; }
+
+.mono { font-family: 'IBM Plex Mono', monospace; font-weight: 600; letter-spacing: 0.13em; }
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+.eyebrow { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 11.5px; letter-spacing: 0.14em; color: var(--ink-3); }
+.meta { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 12px; color: var(--ink-3); }
+.kind { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 13px; }
+
+.btn {
+  height: 50px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-weight: 600;
+  font-size: 17px;
+  width: 100%;
+}
+.btn:active { opacity: 0.82; }
+.btn-orange { background: var(--orange); color: #fff; }
+.btn-ink { background: var(--ink); color: var(--paper); }
+.btn-plain { background: var(--card); border: 1px solid var(--line-2); color: var(--ink); }
+
+.chip {
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  background: var(--card);
+  border: 1px solid var(--line-2);
+  color: var(--ink);
+}
+.chip.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.pill { padding: 6px 11px; border-radius: 99px; background: var(--fill); font-weight: 500; font-size: 13.5px; color: var(--ink-2); }
+.pill.on { background: var(--ink); color: var(--paper); }
+
+.row-strip { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
+.row-strip::-webkit-scrollbar { display: none; }
+
+.avatar { border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+.photo { background: var(--photo); display: flex; align-items: center; justify-content: center; flex: none; overflow: hidden; }
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+
+.sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: rgba(16, 19, 20, 0.42);
+  animation: fade 0.18s ease-out;
+}
+.sheet-body {
+  background: var(--paper);
+  border-radius: 22px 22px 0 0;
+  padding: 10px 20px calc(var(--bottom) + 14px);
+  box-shadow: 0 -8px 34px rgba(0, 0, 0, 0.22);
+  animation: rise 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  max-height: 92%;
+  overflow-y: auto;
+}
+.grabber { width: 38px; height: 4px; border-radius: 99px; background: rgba(16, 19, 20, 0.16); margin: 0 auto 16px; }
+
+@keyframes fade { from { opacity: 0 } }
+@keyframes rise { from { transform: translateY(100%) } }
+
+.field {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid rgba(16, 19, 20, 0.16);
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 16.5px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+}
+.field:focus { border-color: var(--orange); }
+
+.seg { height: 40px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); display: flex; padding: 3px; }
+.seg > button { flex: 1; border-radius: 8px; font-weight: 500; font-size: 14.5px; color: var(--ink-2); }
+.seg > button.on { background: var(--ink); color: var(--paper); font-weight: 600; }
