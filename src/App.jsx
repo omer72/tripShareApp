@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Geolocation } from '@capacitor/geolocation'
 import { load, otherNotes, placeKey, save, setMembership, unpackList } from './data'
-import { AnswerAsk, Cities, Countries, ListScreen, Lists, LocationSheet, MyPlaces, Nearby, OfflineBanner, PlaceScreen, PublicList, SavePlace, SendSheet, Welcome } from './screens'
+import { AnswerAsk, Cities, Countries, ListScreen, Lists, LocationSheet, MyPlaces, Nearby, OfflineBanner, PlaceScreen, PublicList, SavePlace, SendSheet, Splash, Welcome } from './screens'
 
 const SEEN = 'metromosaic.welcomed'
 
@@ -19,12 +19,20 @@ const readLink = () => {
 // Screen stack instead of a router: one back button, no dep.
 export default function App() {
   const [state, setState] = useState(load)
+  // Held for three seconds on a cold start; a shared link skips it, since the
+  // person opening one came for the list, not for us.
+  const [booting, setBooting] = useState(!location.hash.startsWith('#l='))
   const [welcomed, setWelcomed] = useState(() => !!localStorage.getItem(SEEN))
   const [stack, setStack] = useState([{ name: 'home' }])
   const [sheet, setSheet] = useState(null) // {kind:'send', list} | {kind:'location', resolve}
   const [online, setOnline] = useState(navigator.onLine)
 
   useEffect(() => save(state), [state])
+  useEffect(() => {
+    if (!booting) return
+    const done = setTimeout(() => setBooting(false), 3000)
+    return () => clearTimeout(done)
+  }, [booting])
   useEffect(() => {
     const sync = () => setOnline(navigator.onLine)
     window.addEventListener('online', sync)
@@ -251,6 +259,8 @@ export default function App() {
         return <Countries state={state} go={go} onRemoveShared={removeShared} />
     }
   }
+
+  if (booting) return <Splash />
 
   if (!welcomed) {
     return <Welcome me={state.me} onStart={() => { localStorage.setItem(SEEN, '1'); setWelcomed(true) }} />

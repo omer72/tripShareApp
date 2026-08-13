@@ -22,6 +22,23 @@ export const Nearby = registerPlugin('Nearby', {
   }),
 })
 
+/* The launch image is a flash — iOS drops it the moment the webview is up. This
+   is the same artwork in the app, so the two look like one screen that holds. */
+export const SPLASH_FLAGS = ['🇵🇹', '🇪🇸', '🇮🇹', '🇬🇷', '🇮🇱', '🇫🇷', '🇺🇸', '🇲🇽', '🇹🇭']
+
+export function Splash() {
+  return (
+    <div className="screen" style={{ alignItems: 'center', justifyContent: 'center', background: 'var(--paper)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+        {SPLASH_FLAGS.map((f, i) => (
+          <span key={i} style={{ fontSize: 54, lineHeight: 1.15, textAlign: 'center' }}>{f}</span>
+        ))}
+      </div>
+      <div style={{ font: '700 34px Archivo, sans-serif', letterSpacing: '-.03em', marginTop: 30 }}>MetroMosaic</div>
+    </div>
+  )
+}
+
 /* 0 — Welcome: shown once, before anything else */
 export function Welcome({ me, onStart }) {
   return (
