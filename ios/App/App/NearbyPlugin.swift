@@ -11,7 +11,8 @@ public class NearbyPlugin: CAPPlugin, CAPBridgedPlugin {
     public let pluginMethods: [CAPPluginMethod] = [
         .init(name: "lookup", returnType: CAPPluginReturnPromise),
         .init(name: "showMap", returnType: CAPPluginReturnPromise),
-        .init(name: "scanCode", returnType: CAPPluginReturnPromise)
+        .init(name: "scanCode", returnType: CAPPluginReturnPromise),
+        .init(name: "search", returnType: CAPPluginReturnPromise)
     ]
 
     /// Every place on one MapKit map. The map comes up straight away; places with
@@ -69,6 +70,30 @@ public class NearbyPlugin: CAPPlugin, CAPBridgedPlugin {
     private func coordinate(_ lat: Double?, _ lon: Double?) -> CLLocationCoordinate2D? {
         guard let lat, let lon else { return nil }
         return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    }
+
+    /// The same suggestions as `lookup`, for a place you're not standing in —
+    /// typed by name, or by name and city. MapKit, so no API key either.
+    @objc func search(_ call: CAPPluginCall) {
+        let query = (call.getString("query") ?? "").trimmingCharacters(in: .whitespaces)
+        guard !query.isEmpty else {
+            call.reject("Type what you're looking for first")
+            return
+        }
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+
+        MKLocalSearch(request: request).start { response, error in
+            let found = (response?.mapItems ?? []).prefix(6).map { item in
+                ["name": item.name ?? "", "address": Self.oneLine(item.placemark),
+                 "city": item.placemark.locality ?? "", "country": item.placemark.country ?? ""]
+            }
+            if found.isEmpty {
+                call.reject(error?.localizedDescription ?? "Nothing found by that name")
+                return
+            }
+            call.resolve(["suggestions": found])
+        }
     }
 
     @objc func lookup(_ call: CAPPluginCall) {

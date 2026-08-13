@@ -14,6 +14,7 @@ const mapsUrl = (p) => `https://maps.apple.com/?q=${encodeURIComponent(`${p.name
 export const Nearby = registerPlugin('Nearby', {
   web: () => ({
     lookup: async () => ({ suggestions: [] }),
+    search: async () => { throw new Error('Searching needs the app — type the address instead.') },
     scanCode: async () => { throw new Error('Scanning needs the app — type the handle instead.') },
     showMap: async ({ places }) => {
       window.open(`https://www.google.com/maps/search/${encodeURIComponent([places[0]?.name, places[0]?.city].filter(Boolean).join(' '))}`, '_blank')
@@ -272,6 +273,22 @@ export function SavePlace({ state, back, onSave, askLocation, place, city: atCit
     }
   }
 
+  // Saving a place you're not standing in: search by what you typed.
+  const [searching, setSearching] = useState(false)
+  const search = async () => {
+    setProblem('')
+    setSearching(true)
+    try {
+      const { suggestions } = await Nearby.search({ query: [name, address, city].filter(Boolean).join(', ') })
+      setNearby(suggestions)
+      setPicked(null)
+    } catch (e) {
+      setProblem(e?.message || 'Nothing found by that name. Type the address instead.')
+    } finally {
+      setSearching(false)
+    }
+  }
+
   const locate = async () => {
     setProblem('')
     if (!(await askLocation())) return
@@ -308,16 +325,22 @@ export function SavePlace({ state, back, onSave, askLocation, place, city: atCit
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Place name" style={{ border: 0, outline: 'none', background: 'none', font: '600 17px Archivo, sans-serif', width: '100%' }} />
             <input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Address" style={{ border: 0, outline: 'none', background: 'none', font: '400 13.5px Archivo, sans-serif', color: 'var(--ink-3)', width: '100%', marginTop: 2 }} />
           </div>
-          <button onClick={locate} disabled={locating} style={{ font: '500 14px Archivo, sans-serif', color: locating ? 'var(--ink-3)' : 'var(--green)' }}>
-            {locating ? 'Locating…' : 'Locate'}
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end', flex: 'none' }}>
+            <button onClick={locate} disabled={locating} style={{ font: '500 14px Archivo, sans-serif', color: locating ? 'var(--ink-3)' : 'var(--green)' }}>
+              {locating ? 'Locating…' : 'Locate'}
+            </button>
+            {/* For a place you're not standing in — look it up by what you typed. */}
+            <button onClick={search} disabled={searching || !name.trim()} style={{ font: '500 14px Archivo, sans-serif', color: searching || !name.trim() ? 'var(--ink-3)' : 'var(--blue)' }}>
+              {searching ? 'Searching…' : 'Search'}
+            </button>
+          </div>
         </div>
 
         {problem && <div style={{ marginTop: 8, font: '400 13.5px/1.45 Archivo, sans-serif', color: 'var(--orange)' }}>{problem}</div>}
 
         {nearby.length > 0 && (
           <>
-            <div className="eyebrow" style={{ marginTop: 16 }}>NEARBY — PICK ONE</div>
+            <div className="eyebrow" style={{ marginTop: 16 }}>PICK ONE</div>
             <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 1 }}>
               {nearby.map((s, i) => {
                 const on = picked === s
