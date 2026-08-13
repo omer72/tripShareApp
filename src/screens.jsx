@@ -181,9 +181,17 @@ export function Cities({ state, country, back, go, onMap, mapping }) {
 /* 3a — My places: the keeper. One city at a time. */
 export function MyPlaces({ state, go, back, onShareAll, onMap, mapping, city = state.places[0]?.city ?? '', country }) {
   const [filter, setFilter] = useState('All')
+  const [query, setQuery] = useState('')
+  const [byRating, setByRating] = useState(false)
   const inCity = state.places.filter((p) => p.city === city)
-  const shown = filter === 'All' ? inCity : inCity.filter((p) => p.kind === filter)
   const count = (k) => inCity.filter((p) => p.kind === k).length
+
+  // Search covers everything you'd remember a place by — including your own note.
+  const needle = query.trim().toLowerCase()
+  const matched = inCity
+    .filter((p) => filter === 'All' || p.kind === filter)
+    .filter((p) => !needle || [p.name, p.note, p.area, p.address, ...(p.tags ?? [])].join(' ').toLowerCase().includes(needle))
+  const shown = byRating ? [...matched].sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0)) : matched
 
   return (
     <div className="screen">
@@ -200,7 +208,25 @@ export function MyPlaces({ state, go, back, onShareAll, onMap, mapping, city = s
         </button>
       </div>
 
-      <div className="row-strip" style={{ padding: '16px 20px 0', flex: 'none' }}>
+      <div style={{ padding: '14px 20px 0', flex: 'none', display: 'flex', gap: 9 }}>
+        <input
+          className="field"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={`Search ${city}`}
+          style={{ flex: 1 }}
+        />
+        {/* Sort, not filter — an unrated place still belongs in the list. */}
+        <button
+          className={`chip ${byRating ? 'on' : ''}`}
+          onClick={() => setByRating(!byRating)}
+          style={{ flex: 'none' }}
+        >
+          ★ Top rated
+        </button>
+      </div>
+
+      <div className="row-strip" style={{ padding: '12px 20px 0', flex: 'none' }}>
         <button className={`chip ${filter === 'All' ? 'on' : ''}`} onClick={() => setFilter('All')}>All {inCity.length}</button>
         {Object.keys(KINDS).map((k) => (
           <button key={k} className={`chip ${filter === k ? 'on' : ''}`} onClick={() => setFilter(k)}>
@@ -220,7 +246,11 @@ export function MyPlaces({ state, go, back, onShareAll, onMap, mapping, city = s
             footer={<div className="meta" style={{ marginTop: 8 }}>{[p.area?.toUpperCase(), p.sent ? `SENT ${p.sent}×` : null].filter(Boolean).join(' · ')}</div>}
           />
         ))}
-        {!shown.length && <p style={{ color: 'var(--ink-3)', fontSize: 15 }}>Nothing kept here yet.</p>}
+        {!shown.length && (
+          <p style={{ color: 'var(--ink-3)', fontSize: 15 }}>
+            {needle ? `Nothing here matches “${query.trim()}”.` : 'Nothing kept here yet.'}
+          </p>
+        )}
       </div>
 
       <div style={{ padding: '0 20px calc(var(--bottom) + 10px)', display: 'flex', gap: 9 }}>
