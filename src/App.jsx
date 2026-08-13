@@ -116,11 +116,11 @@ export default function App() {
   // with no coordinates get geocoded natively; we keep what comes back so the
   // second open is instant.
   const [mapping, setMapping] = useState(false)
-  const showMap = async (city) => {
+  const showMap = async ({ city, country }) => {
     const all = [
       ...state.places.map((p) => ({ ...p, mine: true })),
       ...(state.shared ?? []).flatMap((s) => s.places.map((p) => ({ ...p, mine: false }))),
-    ].filter((p) => p.city === city)
+    ].filter((p) => (city ? p.city === city : p.country === country))
     const seen = new Set()
     const pins = []
     for (const p of all) {
@@ -247,9 +247,9 @@ export default function App() {
         return <SavePlace key={top.id ?? 'new'} state={state} back={back} place={editing || undefined} onSave={(f) => savePlace({ ...f, id: top.id })} askLocation={askLocation} onNewList={newList} city={top.city} country={top.country} />
       }
       case 'cities':
-        return <Cities state={state} country={top.country} back={back} go={go} />
+        return <Cities state={state} country={top.country} back={back} go={go} onMap={() => showMap({ country: top.country })} mapping={mapping} />
       case 'places':
-        return <MyPlaces state={state} go={go} back={back} city={top.city} country={top.country} onMap={() => showMap(top.city)} mapping={mapping} onShareAll={(places, filter) => setSheet({ kind: 'send', list: cityList(top.city, places, filter) })} />
+        return <MyPlaces state={state} go={go} back={back} city={top.city} country={top.country} onMap={() => showMap({ city: top.city })} mapping={mapping} onShareAll={(places, filter) => setSheet({ kind: 'send', list: cityList(top.city, places, filter) })} />
       case 'shared': {
         const s = state.shared.find((x) => x.id === top.id)
         return (

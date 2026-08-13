@@ -142,8 +142,9 @@ export function Countries({ state, go, onRemoveShared }) {
 }
 
 /* 2 — Cities in a country */
-export function Cities({ state, country, back, go }) {
+export function Cities({ state, country, back, go, onMap, mapping }) {
   const cities = Object.entries(byCountry(state.places)[country] ?? {}).sort()
+  const places = cities.reduce((n, [, count]) => n + count, 0)
 
   return (
     <div className="screen">
@@ -158,6 +159,12 @@ export function Cities({ state, country, back, go }) {
             {Icon.right('#8A8F92')}
           </button>
         ))}
+      </div>
+      {/* Every city at once — the whole country on one map. */}
+      <div style={{ padding: '0 20px calc(var(--bottom) + 10px)' }}>
+        <button className="btn btn-plain" onClick={onMap} disabled={mapping || !places} style={{ height: 46, borderRadius: 12, fontSize: 16 }}>
+          {Icon.pin(mapping ? '#8A8F92' : '#E2552B')} {mapping ? 'Finding them all…' : `All ${places} on a map`}
+        </button>
       </div>
     </div>
   )
