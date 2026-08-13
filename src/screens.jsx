@@ -7,6 +7,14 @@ import { Hero, Icon, Kind, Photo, PlaceRow, Stars, TopBar } from './ui'
 
 const mapsUrl = (p) => `https://maps.apple.com/?q=${encodeURIComponent(`${p.name} ${p.address || ''}`)}`
 
+// Waze takes coordinates when we have them — kept from the last time the place
+// was on a map — and the name otherwise. The https form opens the app if it's
+// installed and the website if it isn't.
+const wazeUrl = (p) =>
+  p.lat && p.lng
+    ? `https://waze.com/ul?ll=${p.lat},${p.lng}&navigate=yes`
+    : `https://waze.com/ul?q=${encodeURIComponent([p.name, p.address, p.city].filter(Boolean).join(', '))}&navigate=yes`
+
 // Native (MapKit) lookup of what's around a coordinate. In a browser there's no
 // equivalent without an API key, so the web build just falls back to coordinates.
 // showMap has no browser equivalent either — dev falls back to a Google Maps
@@ -582,6 +590,7 @@ export function PublicList({ list, places, onKeep, onBack, onDelete, openInApp, 
                   )}
                   <div style={{ display: 'flex', gap: 14, marginTop: 8 }}>
                     <a href={mapsUrl(p)} style={{ font: '600 12.5px Archivo, sans-serif', color: 'var(--blue)', textDecoration: 'none' }}>Open in Maps</a>
+                    <a href={wazeUrl(p)} target="_blank" rel="noreferrer" style={{ font: '600 12.5px Archivo, sans-serif', color: 'var(--blue)', textDecoration: 'none' }}>Waze</a>
                   </div>
                 </div>
               </div>
@@ -636,6 +645,7 @@ export function PlaceScreen({ place, back, onSend, onEdit, others = [] }) {
 
           <div style={{ marginTop: 14, display: 'flex', gap: 9, flexWrap: 'wrap' }}>
             <a className="btn btn-plain" style={{ height: 44, borderRadius: 11, fontSize: 15, textDecoration: 'none' }} href={mapsUrl(place)}>{Icon.pin('#2E6FA8')} Maps</a>
+            <a className="btn btn-plain" style={{ height: 44, borderRadius: 11, fontSize: 15, textDecoration: 'none' }} href={wazeUrl(place)} target="_blank" rel="noreferrer">{Icon.pin('#33CCFF')} Waze</a>
             {/* No number, no buttons — a Call that can't dial reads as broken. */}
             {!!place.phone && (
               <>
