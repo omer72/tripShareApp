@@ -8,18 +8,18 @@ globalThis.localStorage = {
   setItem: (k, v) => { store[k] = v },
 }
 
-const { load, save, shareUrl, setMembership, byCountry, otherNotes, flagOf, instagramHandle, unpackList, SITE } = await import('./src/data.js')
+const { load, save, shareUrl, setMembership, byCountry, otherNotes, flagOf, instagramHandle, initialsOf, unpackList, SITE } = await import('./src/data.js')
 
 const seeded = load()
 assert.equal(seeded.places.length, 9)
 // A sent link carries the list in its fragment and comes back out intact.
-const link = await shareUrl(seeded.lists[0], seeded.places.slice(0, 4), 'Tamar R.')
+const link = await shareUrl(seeded.lists[0], seeded.places.slice(0, 4), seeded.me.name)
 assert.ok(link.startsWith(`${SITE}/#l=`))
 assert.ok(link.length < 2000, `link is ${link.length} chars — too long to send`)
 const back = await unpackList(link.split('#l=')[1])
 assert.equal(back.list.title, 'Lisbon, 3 days')
-assert.equal(back.list.by, 'Tamar R.')
-assert.equal(back.list.initials, 'TR')
+assert.equal(back.list.by, 'Omer')
+assert.equal(back.list.initials, 'O')
 assert.deepEqual(back.places.map((p) => p.name), seeded.places.slice(0, 4).map((p) => p.name))
 assert.equal(back.places[0].note, seeded.places[0].note)
 assert.equal(back.places[0].stars, 5)
@@ -63,6 +63,11 @@ assert.equal(instagramHandle('https://instagram.com/casa.boa?igsh=xyz'), 'casa.b
 assert.equal(instagramHandle('@casaboa'), 'casaboa')
 assert.equal(instagramHandle('https://example.com/casaboa'), '')
 assert.equal(instagramHandle(''), '')
+
+// Initials come from the name itself, however many words it has.
+assert.equal(initialsOf('Omer'), 'O')
+assert.equal(initialsOf('Omer Erez'), 'OE')
+assert.equal(initialsOf(''), '?')
 
 // Flags come from the country name, and an unknown one is simply flagless.
 assert.equal(flagOf('Portugal'), '\u{1F1F5}\u{1F1F9}')

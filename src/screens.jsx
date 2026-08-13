@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { registerPlugin } from '@capacitor/core'
 import { Share } from '@capacitor/share'
 import { Geolocation } from '@capacitor/geolocation'
-import { KINDS, TAGS, byCountry, flagOf, instagramHandle, shareUrl, shrink } from './data'
+import { KINDS, TAGS, byCountry, flagOf, initialsOf, instagramHandle, shareUrl, shrink } from './data'
 import { Hero, Icon, Kind, Photo, PlaceRow, Stars, TopBar } from './ui'
 
 const mapsUrl = (p) => `https://maps.apple.com/?q=${encodeURIComponent(`${p.name} ${p.address || ''}`)}`
@@ -70,7 +70,7 @@ export function Countries({ state, go }) {
           <div style={{ font: '700 29px/1.15 Archivo, sans-serif', letterSpacing: '-.028em', marginTop: 8 }}>Where you've been</div>
         </div>
         <button onClick={() => go({ name: 'lists' })} className="avatar" style={{ width: 34, height: 34, fontSize: 14 }}>
-          {state.me.initials}
+          {initialsOf(state.me.name)}
         </button>
       </div>
 
@@ -157,7 +157,7 @@ export function MyPlaces({ state, go, back, onShareAll, onMap, mapping, city = s
           </div>
         </div>
         <button onClick={() => go({ name: 'lists' })} className="avatar" style={{ width: 34, height: 34, fontSize: 14 }}>
-          {state.me.initials}
+          {initialsOf(state.me.name)}
         </button>
       </div>
 
@@ -504,8 +504,8 @@ export function PublicList({ list, places, onKeep, onBack, others = () => [] }) 
       <div className="scroll">
         <Hero height={200} src={places[0]?.photos?.[0]} onBack={onBack}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div className="avatar" style={{ width: 22, height: 22, fontSize: 10.5 }}>{list.initials ?? 'TR'}</div>
-            <span className="eyebrow" style={{ color: 'rgba(243,241,235,.75)' }}>{(list.by ?? 'Tamar R.').toUpperCase()} RECOMMENDS</span>
+            <div className="avatar" style={{ width: 22, height: 22, fontSize: 10.5 }}>{list.initials || initialsOf(list.by)}</div>
+            <span className="eyebrow" style={{ color: 'rgba(243,241,235,.75)' }}>{(list.by || 'SOMEONE').toUpperCase()} RECOMMENDS</span>
           </div>
           <div style={{ font: '700 28px/1.14 Archivo, sans-serif', letterSpacing: '-.03em', color: 'var(--paper)', marginTop: 8 }}>{list.title}</div>
         </Hero>
@@ -707,10 +707,14 @@ export function OfflineBanner({ queued }) {
 
 /* Lists index — reached from the avatar; not a design screen, the shortest way
    to make lists and "someone asks you" reachable from the app. */
-export function Lists({ state, back, go }) {
+export function Lists({ state, back, go, onRename }) {
   return (
     <div className="screen">
-      <TopBar onBack={back} title={state.me.name} />
+      <TopBar
+        onBack={back}
+        title={state.me.name}
+        right={<button onClick={onRename} style={{ font: '500 15px Archivo, sans-serif', color: 'var(--green)' }}>Change name</button>}
+      />
       <div className="scroll" style={{ padding: '18px 20px' }}>
         <div className="eyebrow">MY LISTS</div>
         <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>

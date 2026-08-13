@@ -148,6 +148,12 @@ export default function App() {
     live: false,
   })
 
+  // Your name rides along on every link you send, so it's worth being yours.
+  const rename = () => {
+    const name = prompt('Your name, as people see it on lists you send', state.me.name)?.trim()
+    if (name) setState((s) => ({ ...s, me: { ...s.me, name } }))
+  }
+
   const countSend = (listId) =>
     setState((s) => ({ ...s, lists: s.lists.map((l) => (l.id === listId ? { ...l, sent: l.sent + 1 } : l)) }))
 
@@ -212,7 +218,7 @@ export default function App() {
         return <PublicList list={s} places={s.places} onBack={back} onKeep={() => keepShared(s)} others={(p) => otherNotes(p, state.shared)} />
       }
       case 'lists':
-        return <Lists state={state} back={back} go={go} />
+        return <Lists state={state} back={back} go={go} onRename={rename} />
       case 'ask':
         return <AnswerAsk state={state} back={back} onSend={(list) => setSheet({ kind: 'send', list })} />
       case 'list': {

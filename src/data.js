@@ -5,7 +5,7 @@ export const TAGS = ['Worth a detour', 'Book ahead', 'Kids fine', 'Cheap', 'Cash
 export const KINDS = { EAT: '#E2552B', SEE: '#1B5E4B', DRINK: '#8A8F92' }
 
 const seed = {
-  me: { name: 'Tamar R.', initials: 'TR' },
+  me: { name: 'Omer' },
   places: [
     { id: 'p1', stars: 5, phone: '+351 21 886 1234', name: 'Casa Boa', kind: 'EAT', area: 'Alfama', address: 'R. dos Bacalhoeiros 12, Alfama', city: 'Lisbon', country: 'Portugal', note: "Go at six, before the queue. Clams, extra bread, cash only. If it's full, the place two doors down is the same family.", tags: ['Worth a detour', 'Cheap', 'Cash only'], sent: 7, photos: [] },
     { id: 'p2', stars: 4, name: 'Miradouro da Graça', kind: 'SEE', area: 'Graça', address: 'Calçada da Graça, Graça', city: 'Lisbon', country: 'Portugal', note: 'Sunset side is the left bench. Kiosk wine is fine and cheap.', tags: ['Cheap', 'Kids fine'], sent: 4, photos: [] },
@@ -77,7 +77,7 @@ export function load() {
 
 export function save(state) {
   try {
-    localStorage.setItem(KEY, JSON.stringify({ places: state.places, lists: state.lists }))
+    localStorage.setItem(KEY, JSON.stringify({ places: state.places, lists: state.lists, me: state.me }))
   } catch (e) {
     // Full quota mustn't take the app down — the in-memory state is still correct.
     // ponytail: photos are the only thing big enough to hit this; move them out of
@@ -151,6 +151,10 @@ export function byCountry(places) {
 // Each sender's copy of a place has its own id, so the same restaurant is matched
 // on name + city. Anything stricter (coordinates, an address string) and two
 // people who typed it differently stop lining up.
+// Initials from whatever name you set — no second field to keep in step.
+export const initialsOf = (name = '') =>
+  name.split(/\s+/).filter(Boolean).map((w) => w[0].toUpperCase()).slice(0, 2).join('') || '?'
+
 export const placeKey = (p) => `${(p.name ?? '').trim().toLowerCase()}|${(p.city ?? '').trim().toLowerCase()}`
 
 // What everyone else wrote about this place. Their note verbatim — the whole
