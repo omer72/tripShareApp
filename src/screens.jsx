@@ -152,19 +152,24 @@ export function Countries({ state, go, onRemoveShared }) {
 /* 2 — Cities in a country */
 export function Cities({ state, country, back, go, onMap, mapping }) {
   const [query, setQuery] = useState('')
+  const [tags, setTags] = useState([])
   const cities = Object.entries(byCountry(state.places)[country] ?? {}).sort()
   const places = cities.reduce((n, [, count]) => n + count, 0)
+  const mine = state.places.filter((p) => p.country === country)
 
-  // Searching a country looks past the cities to the places themselves — you
-  // rarely remember which city a place was in, which is why you're searching.
+  // Only tags you actually used here — a filter that finds nothing is furniture.
+  const usable = TAGS.filter((t) => mine.some((p) => p.tags?.includes(t)))
+
+  // Searching or filtering a country looks past the cities to the places
+  // themselves — you rarely remember which city a place was in.
   const needle = query.trim().toLowerCase()
-  const found = !needle
+  const sifting = !!needle || tags.length > 0
+  const found = !sifting
     ? []
-    : state.places.filter(
-        (p) =>
-          p.country === country &&
-          [p.name, p.note, p.area, p.address, p.city, ...(p.tags ?? [])].join(' ').toLowerCase().includes(needle),
-      )
+    : mine
+        .filter((p) => !needle || [p.name, p.note, p.area, p.address, p.city, ...(p.tags ?? [])].join(' ').toLowerCase().includes(needle))
+        // Every tag you tick, not any — ticking two is how you narrow.
+        .filter((p) => tags.every((t) => p.tags?.includes(t)))
 
   return (
     <div className="screen">
@@ -179,8 +184,22 @@ export function Cities({ state, country, back, go, onMap, mapping }) {
         />
       </div>
 
+      {!!usable.length && (
+        <div className="row-strip" style={{ padding: '10px 20px 0', flex: 'none' }}>
+          {usable.map((t) => (
+            <button
+              key={t}
+              className={`chip ${tags.includes(t) ? 'on' : ''}`}
+              onClick={() => setTags(tags.includes(t) ? tags.filter((x) => x !== t) : [...tags, t])}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="scroll" style={{ padding: '18px 20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {needle
+        {sifting
           ? found.map((p) => (
               <PlaceRow
                 key={p.id}
@@ -200,8 +219,10 @@ export function Cities({ state, country, back, go, onMap, mapping }) {
                 {Icon.right('#8A8F92')}
               </button>
             ))}
-        {needle && !found.length && (
-          <p style={{ color: 'var(--ink-3)', fontSize: 15 }}>Nothing in {country} matches “{query.trim()}”.</p>
+        {sifting && !found.length && (
+          <p style={{ color: 'var(--ink-3)', fontSize: 15 }}>
+            Nothing in {country} matches {[needle && `“${query.trim()}”`, tags.join(' + ')].filter(Boolean).join(' and ')}.
+          </p>
         )}
       </div>
 
