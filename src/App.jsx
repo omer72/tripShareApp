@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Geolocation } from '@capacitor/geolocation'
 import { load, otherNotes, placeKey, save, setMembership, unpackList } from './data'
+import { Capacitor } from '@capacitor/core'
 import { AnswerAsk, Cities, Countries, ListScreen, Lists, LocationSheet, MyPlaces, Nearby, OfflineBanner, PlaceScreen, PublicList, SavePlace, SendSheet, Splash, Welcome } from './screens'
 
 const SEEN = 'metromosaic.welcomed'
@@ -19,7 +20,7 @@ const readLink = () => {
 // Screen stack instead of a router: one back button, no dep.
 export default function App() {
   const [state, setState] = useState(load)
-  // Held for five seconds on a cold start; a shared link skips it, since the
+  // Held for three seconds on a cold start; a shared link skips it, since the
   // person opening one came for the list, not for us.
   const [booting, setBooting] = useState(!location.hash.startsWith('#l='))
   const [welcomed, setWelcomed] = useState(() => !!localStorage.getItem(SEEN))
@@ -30,7 +31,7 @@ export default function App() {
   useEffect(() => save(state), [state])
   useEffect(() => {
     if (!booting) return
-    const done = setTimeout(() => setBooting(false), 5000)
+    const done = setTimeout(() => setBooting(false), 3000)
     return () => clearTimeout(done)
   }, [booting])
   useEffect(() => {
@@ -203,6 +204,7 @@ export default function App() {
       <PublicList
         list={incoming.list}
         places={incoming.places}
+        openInApp={Capacitor.isNativePlatform() ? undefined : `metromosaic://open#l=${packed}`}
         onKeep={() => {
           // Keeping writes them into this device's own places, then drops the link.
           setState((s) => {

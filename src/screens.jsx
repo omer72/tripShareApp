@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { registerPlugin } from '@capacitor/core'
+import { Capacitor, registerPlugin } from '@capacitor/core'
 import { Share } from '@capacitor/share'
 import { Geolocation } from '@capacitor/geolocation'
 import { KINDS, TAGS, byCountry, flagOf, initialsOf, instagramHandle, shareUrl, shrink } from './data'
@@ -521,7 +521,7 @@ export function SendSheet({ list, places, close, onSent, me }) {
 }
 
 /* 3e — What the receiver sees, in a browser, with no app */
-export function PublicList({ list, places, onKeep, onBack, onDelete, others = () => [] }) {
+export function PublicList({ list, places, onKeep, onBack, onDelete, openInApp, others = () => [] }) {
   return (
     <div className="screen">
       <div className="scroll">
@@ -558,6 +558,11 @@ export function PublicList({ list, places, onKeep, onBack, onDelete, others = ()
         </div>
       </div>
       <div style={{ padding: '13px 20px calc(var(--bottom) + 14px)', background: 'rgba(243,241,235,.95)', backdropFilter: 'blur(12px)', borderTop: '1px solid var(--line)' }}>
+        {/* Keeping in a browser saves to that browser. If the app is installed,
+            hand it the same payload so the places land where you'll look for them. */}
+        {openInApp && (
+          <a className="btn btn-orange" href={openInApp} style={{ marginBottom: 9, textDecoration: 'none' }}>{Icon.down('#fff')} Open in the app</a>
+        )}
         <div style={{ display: 'flex', gap: 9 }}>
           <button className="btn btn-ink" onClick={onKeep}>{Icon.down()} Keep these {places.length} places</button>
           {/* Only when it's a list in your inbox — the browser view has nothing to delete. */}
@@ -566,7 +571,7 @@ export function PublicList({ list, places, onKeep, onBack, onDelete, others = ()
           )}
         </div>
         <div style={{ font: '400 13px/1.5 Archivo, sans-serif', color: 'var(--ink-3)', textAlign: 'center', marginTop: 9 }}>
-          Works in the browser. The app is only if you want to save your own.
+          {openInApp ? 'Keeping here saves to this browser. Open in the app to keep them on your phone.' : 'Works in the browser. The app is only if you want to save your own.'}
         </div>
       </div>
     </div>
