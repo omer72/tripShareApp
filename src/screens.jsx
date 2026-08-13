@@ -504,7 +504,7 @@ export function SendSheet({ list, places, close, onSent, me }) {
 }
 
 /* 3e — What the receiver sees, in a browser, with no app */
-export function PublicList({ list, places, onKeep, onBack, others = () => [] }) {
+export function PublicList({ list, places, onKeep, onBack, onDelete, others = () => [] }) {
   return (
     <div className="screen">
       <div className="scroll">
@@ -541,7 +541,13 @@ export function PublicList({ list, places, onKeep, onBack, others = () => [] }) 
         </div>
       </div>
       <div style={{ padding: '13px 20px calc(var(--bottom) + 14px)', background: 'rgba(243,241,235,.95)', backdropFilter: 'blur(12px)', borderTop: '1px solid var(--line)' }}>
-        <button className="btn btn-ink" onClick={onKeep}>{Icon.down()} Keep these {places.length} places</button>
+        <div style={{ display: 'flex', gap: 9 }}>
+          <button className="btn btn-ink" onClick={onKeep}>{Icon.down()} Keep these {places.length} places</button>
+          {/* Only when it's a list in your inbox — the browser view has nothing to delete. */}
+          {onDelete && (
+            <button className="btn btn-plain" onClick={onDelete} aria-label={`Delete ${list.title}`} style={{ width: 50, flex: 'none' }}>{Icon.trash()}</button>
+          )}
+        </div>
         <div style={{ font: '400 13px/1.5 Archivo, sans-serif', color: 'var(--ink-3)', textAlign: 'center', marginTop: 9 }}>
           Works in the browser. The app is only if you want to save your own.
         </div>

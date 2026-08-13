@@ -157,8 +157,9 @@ export default function App() {
   // Deleting someone else's list only drops it from your inbox — anything you
   // already kept from it stays in your places.
   const removeShared = (list) => {
-    if (!confirm(`Delete “${list.title}” from ${list.by}? Places you already kept stay.`)) return
+    if (!confirm(`Delete “${list.title}” from ${list.by}? Places you already kept stay.`)) return false
     setState((s) => ({ ...s, shared: s.shared.filter((x) => x.id !== list.id) }))
+    return true
   }
 
   const countSend = (listId) =>
@@ -222,7 +223,16 @@ export default function App() {
         return <MyPlaces state={state} go={go} back={back} city={top.city} country={top.country} onMap={() => showMap(top.city)} mapping={mapping} onShareAll={(places, filter) => setSheet({ kind: 'send', list: cityList(top.city, places, filter) })} />
       case 'shared': {
         const s = state.shared.find((x) => x.id === top.id)
-        return <PublicList list={s} places={s.places} onBack={back} onKeep={() => keepShared(s)} others={(p) => otherNotes(p, state.shared)} />
+        return (
+          <PublicList
+            list={s}
+            places={s.places}
+            onBack={back}
+            onKeep={() => keepShared(s)}
+            onDelete={() => { if (removeShared(s)) back() }}
+            others={(p) => otherNotes(p, state.shared)}
+          />
+        )
       }
       case 'lists':
         return <Lists state={state} back={back} go={go} onRename={rename} />
