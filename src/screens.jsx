@@ -185,7 +185,7 @@ export function MyPlaces({ state, go, back, onShareAll, onMap, mapping, city = s
       </div>
 
       <div style={{ padding: '0 20px calc(var(--bottom) + 10px)', display: 'flex', gap: 9 }}>
-        <button className="btn btn-ink" onClick={onShareAll}>{Icon.share('#F3F1EB')} Share these {shown.length}</button>
+        <button className="btn btn-ink" onClick={() => onShareAll(shown, filter)}>{Icon.share('#F3F1EB')} Share these {shown.length}</button>
         <button className="btn btn-plain" onClick={onMap} disabled={mapping} aria-label={`${city} on a map`} style={{ width: 50, flex: 'none' }}>{Icon.pin(mapping ? '#8A8F92' : '#E2552B')}</button>
         <button className="btn btn-orange" onClick={() => go({ name: 'save', city, country })} aria-label="Save a place" style={{ width: 50, flex: 'none' }}>{Icon.plus()}</button>
       </div>

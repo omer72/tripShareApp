@@ -126,6 +126,17 @@ export default function App() {
     }
   }
 
+  // Sharing a city sends what you're looking at — that city, that filter — not
+  // whichever saved list happens to come first.
+  const cityList = (city, places, filter) => ({
+    id: `city-${city}`,
+    title: filter && filter !== 'All' ? `${city}, ${filter[0] + filter.slice(1).toLowerCase()}` : city,
+    blurb: `The ${places.length} places I'd send you in ${city}.`,
+    placeIds: places.map((p) => p.id),
+    sent: 0,
+    live: false,
+  })
+
   const countSend = (listId) =>
     setState((s) => ({ ...s, lists: s.lists.map((l) => (l.id === listId ? { ...l, sent: l.sent + 1 } : l)) }))
 
@@ -169,7 +180,7 @@ export default function App() {
       case 'cities':
         return <Cities state={state} country={top.country} back={back} go={go} />
       case 'places':
-        return <MyPlaces state={state} go={go} back={back} city={top.city} country={top.country} onMap={() => showMap(top.city)} mapping={mapping} onShareAll={() => setSheet({ kind: 'send', list: state.lists[0] })} />
+        return <MyPlaces state={state} go={go} back={back} city={top.city} country={top.country} onMap={() => showMap(top.city)} mapping={mapping} onShareAll={(places, filter) => setSheet({ kind: 'send', list: cityList(top.city, places, filter) })} />
       case 'shared': {
         const s = state.shared.find((x) => x.id === top.id)
         return <PublicList list={s} places={s.places} onBack={back} onKeep={() => keepShared(s)} others={(p) => otherNotes(p, state.shared)} />
