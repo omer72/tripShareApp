@@ -164,7 +164,7 @@ export const otherNotes = (place, shared = []) =>
 
 // Where the receiver view is hosted. One line to change once Vercel gives you a
 // domain — the app itself never talks to it, links just point at it.
-export const SITE = 'https://metromosaic.vercel.app'
+export const SITE = 'https://trip-share-app-pink.vercel.app'
 
 // A sent link carries the whole list in its fragment: no backend, and the link
 // keeps working forever. Fragments never reach a server, so nothing is logged.
